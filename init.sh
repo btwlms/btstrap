@@ -1,6 +1,8 @@
 #!/bin/bash
 # Tru-Strap: prepare an instance for a Puppet run
 
+export HOME="/root"
+
 main() {
     parse_args "$@"
     setup_rhel7_repo
