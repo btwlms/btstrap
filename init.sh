@@ -1,7 +1,7 @@
 #!/bin/bash
 # Tru-Strap: prepare an instance for a Puppet run
-
-main() {
+export setenv HOME="/root" 
+    main() {
     parse_args "$@"
     setup_rhel7_repo
     install_yum_deps
