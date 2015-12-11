@@ -8,10 +8,8 @@ export setenv HOME="/root"
     install_ruby
     set_gemsources "$@"
     install_gem_deps
-    inject_ssh_key
     clone_git_repo
     symlink_puppet_dir
-    inject_eyaml_keys
     fetch_puppet_modules
     run_puppet
 }
@@ -237,19 +235,6 @@ install_gem_deps() {
   gem_install puppet:3.7.4 hiera facter ruby-augeas hiera-eyaml ruby-shadow
 }
 
-# Inject the SSH key to allow git cloning
-inject_ssh_key() {
-  # Set Git login params
-  echo "Injecting private ssh key"
-  GITHUB_PRI_KEY=$(cat "${FACTER_init_repoprivkeyfile}")
-  if [[ ! -d /root/.ssh ]]; then
-    mkdir /root/.ssh
-    chmod 600 /root/.ssh
-  fi
-  echo "${GITHUB_PRI_KEY}" > /root/.ssh/id_rsa
-  echo "StrictHostKeyChecking=no" > /root/.ssh/config
-  chmod -R 600 /root/.ssh
-}
 
 # Clone the git repo
 clone_git_repo() {
