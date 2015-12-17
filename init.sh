@@ -1,19 +1,22 @@
 #!/bin/bash
 # Tru-Strap: prepare an instance for a Puppet run
+<<<<<<< HEAD
+export setenv HOME="/root" 
+    main() {
+=======
 
 export HOME="/root"
 
 main() {
+>>>>>>> 034b8f1d9ff5fda7ce15315341ae8f150eb59dcc
     parse_args "$@"
     setup_rhel7_repo
     install_yum_deps
     install_ruby
     set_gemsources "$@"
     install_gem_deps
-    inject_ssh_key
     clone_git_repo
     symlink_puppet_dir
-    inject_eyaml_keys
     fetch_puppet_modules
     run_puppet
 }
@@ -239,19 +242,6 @@ install_gem_deps() {
   gem_install puppet:3.7.4 hiera facter ruby-augeas hiera-eyaml ruby-shadow
 }
 
-# Inject the SSH key to allow git cloning
-inject_ssh_key() {
-  # Set Git login params
-  echo "Injecting private ssh key"
-  GITHUB_PRI_KEY=$(cat "${FACTER_init_repoprivkeyfile}")
-  if [[ ! -d /root/.ssh ]]; then
-    mkdir /root/.ssh
-    chmod 600 /root/.ssh
-  fi
-  echo "${GITHUB_PRI_KEY}" > /root/.ssh/id_rsa
-  echo "StrictHostKeyChecking=no" > /root/.ssh/config
-  chmod -R 600 /root/.ssh
-}
 
 # Clone the git repo
 clone_git_repo() {
@@ -275,29 +265,6 @@ symlink_puppet_dir() {
   ln -s /etc/puppet/hiera.yaml /etc/hiera.yaml
 }
 
-# Inject the eyaml keys
-inject_eyaml_keys() {
-  # If no eyaml keys have been provided, create some
-  if [[ -z "${FACTER_init_eyamlpubkeyfile}" ]] && [[ -z "${FACTER_init_eyamlprivkeyfile}" ]] && [[ ! -d "/etc/puppet/secure/keys" ]]; then
-    if [[ ! -d /etc/puppet/secure/keys ]]; then
-      mkdir -p /etc/puppet/secure/keys
-      chmod -R 500 /etc/puppet/secure
-    fi
-    cd /etc/puppet/secure || exit
-    echo -n "Creating eyaml key pair"
-    eyaml createkeys
-  else
-  # Or use the ones provided
-    echo "Injecting eyaml keys"
-    EYAML_PUB_KEY=$(cat "${FACTER_init_eyamlpubkeyfile}")
-    EYAML_PRI_KEY=$(cat "${FACTER_init_eyamlprivkeyfile}")
-    mkdir -p /etc/puppet/secure/keys
-    echo "${EYAML_PUB_KEY}" > /etc/puppet/secure/keys/public_key.pkcs7.pem
-    echo "${EYAML_PRI_KEY}" > /etc/puppet/secure/keys/private_key.pkcs7.pem
-    chmod -R 500 /etc/puppet/secure
-    chmod 400 /etc/puppet/secure/keys/*.pem
-  fi
-}
 
 run_librarian() {
   echo -n "Installing librarian-puppet"
@@ -384,3 +351,4 @@ run_puppet() {
 }
 
 main "$@"
+
