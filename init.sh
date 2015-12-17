@@ -258,29 +258,6 @@ symlink_puppet_dir() {
   ln -s /etc/puppet/hiera.yaml /etc/hiera.yaml
 }
 
-# Inject the eyaml keys
-inject_eyaml_keys() {
-  # If no eyaml keys have been provided, create some
-  if [[ -z "${FACTER_init_eyamlpubkeyfile}" ]] && [[ -z "${FACTER_init_eyamlprivkeyfile}" ]] && [[ ! -d "/etc/puppet/secure/keys" ]]; then
-    if [[ ! -d /etc/puppet/secure/keys ]]; then
-      mkdir -p /etc/puppet/secure/keys
-      chmod -R 500 /etc/puppet/secure
-    fi
-    cd /etc/puppet/secure || exit
-    echo -n "Creating eyaml key pair"
-    eyaml createkeys
-  else
-  # Or use the ones provided
-    echo "Injecting eyaml keys"
-    EYAML_PUB_KEY=$(cat "${FACTER_init_eyamlpubkeyfile}")
-    EYAML_PRI_KEY=$(cat "${FACTER_init_eyamlprivkeyfile}")
-    mkdir -p /etc/puppet/secure/keys
-    echo "${EYAML_PUB_KEY}" > /etc/puppet/secure/keys/public_key.pkcs7.pem
-    echo "${EYAML_PRI_KEY}" > /etc/puppet/secure/keys/private_key.pkcs7.pem
-    chmod -R 500 /etc/puppet/secure
-    chmod 400 /etc/puppet/secure/keys/*.pem
-  fi
-}
 
 run_librarian() {
   echo -n "Installing librarian-puppet"
@@ -367,3 +344,4 @@ run_puppet() {
 }
 
 main "$@"
+
