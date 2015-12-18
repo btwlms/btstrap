@@ -13,6 +13,7 @@ main() {
     install_gem_deps
     clone_git_repo
     symlink_puppet_dir
+    inject_eyaml_keys
     fetch_puppet_modules
     run_puppet
 }
@@ -45,26 +46,6 @@ parse_args() {
       set_facter init_reponame "${2}"
       shift
       ;;
-    --repoprivkeyfile|-k)
-      set_facter init_repoprivkeyfile "${2}"
-      shift
-      ;;
-    --repobranch|-b)
-      set_facter init_repobranch "${2}"
-      shift
-      ;;
-    --repodir|-d)
-      set_facter init_repodir "${2}"
-      shift
-      ;;
-    --eyamlpubkeyfile|-j)
-      set_facter init_eyamlpubkeyfile "${2}"
-      shift
-      ;;
-    --eyamlprivkeyfile|-m)
-      set_facter init_eyamlprivkeyfile "${2}"
-      shift
-      ;;
     --moduleshttpcache|-c)
       set_facter init_moduleshttpcache "${2}"
       shift
@@ -92,7 +73,7 @@ parse_args() {
   usagemessage="Error, USAGE: $(basename "${0}") --role|-r --environment|-e --repouser|-u --reponame|-n --repoprivkeyfile|-k [--repobranch|-b] [--repodir|-d] [--eyamlpubkeyfile|-j] [--eyamlprivkeyfile|-m] [--gemsources|-s] [--help|-h] [--version|-v]"
 
   # Define required parameters.
-  if [[ -z "${FACTER_init_role}" || -z "${FACTER_init_env}" || -z "${FACTER_init_repouser}" || -z "${FACTER_init_reponame}" || -z "${FACTER_init_repoprivkeyfile}" ]]; then
+  if [[ -z "${FACTER_init_role}" || -z "${FACTER_init_env}" || -z "${FACTER_init_repouser}" || -z "${FACTER_init_reponame}" ]]; then
     echo "${usagemessage}"
     exit 1
   fi
