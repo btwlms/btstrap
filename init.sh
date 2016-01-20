@@ -245,6 +245,7 @@ symlink_puppet_dir() {
 
 run_librarian() {
   echo -n "Installing librarian-puppet"
+  gem install activesupport -v 4.2.5 --no-ri --no-rdoc
   gem install librarian-puppet --no-ri --no-rdoc
   echo -n "Installing Puppet modules"
   librarian-puppet install --verbose
