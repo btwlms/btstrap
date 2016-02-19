@@ -155,7 +155,7 @@ install_ruby() {
    ruby -v  > /dev/null 2>&1
    if [[ $? -ne 0 ]] || [[ $(ruby -v | awk '{print $2}' | cut -d '.' -f 1) -lt 2 ]]; then
      yum remove -y ruby-*
-     yum install -y https://s3-eu-west-1.amazonaws.com/msm-public-repo/ruby/ruby-2.1.5-2.el6.x86_64.rpm
+     https://s3-eu-west-1.amazonaws.com/bt-wlms-file-repo/ruby-2.1.5-2.el6.x86_64.rpm
    fi
   elif [[ "$majorversion" == "7" ]]; then
     echo "Linux Major version 7"
